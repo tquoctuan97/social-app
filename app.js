@@ -1,14 +1,14 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const router = require('./router');
+const router = require("./router");
 
-app.use(express.static('public'))
-app.set('views','views')
-app.set('view engine', 'ejs')
+app.use(express.static("public"));
+app.set("views", "views");
+app.set("view engine", "ejs");
 
 // Get body request
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: false }));
 
-app.use('/', router)
+app.use("/", router);
 
-app.listen(3000)
+module.exports = app;
