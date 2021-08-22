@@ -57,18 +57,22 @@ User.prototype.validate = function () {
   }
 };
 
-User.prototype.login = function (callback) {
-  this.cleanUp();
-  usersConllection.findOne(
-    { username: this.data.username },
-    (err, tempUser) => {
-      if (tempUser && tempUser.password == this.data.password) {
-        callback("Login sucessfully");
-      } else {
-        callback("Invalid username / password");
-      }
-    }
-  );
+User.prototype.login = function () {
+  return new Promise((resolve, reject) => {
+    this.cleanUp();
+    usersConllection
+      .findOne({ username: this.data.username })
+      .then((tempUser) => {
+        if (tempUser && tempUser.password == this.data.password) {
+          resolve("Login sucessfully");
+        } else {
+          reject("Invalid username / password");
+        }
+      })
+      .catch(function () {
+        reject("Please try again later");
+      });
+  });
 };
 
 User.prototype.register = function () {
