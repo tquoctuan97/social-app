@@ -6,14 +6,20 @@ exports.login = function (req, res) {
     .login()
     .then(function (response) {
       req.session.user = { favColor: "Blue", username: user.data.username };
-      res.redirect("/");
+      req.session.save(function () {
+        res.redirect("/");
+      });
     })
     .catch(function (err) {
       res.send(err);
     });
 };
 
-exports.logout = function () {};
+exports.logout = function (req, res) {
+  req.session.destroy(function () {
+    res.redirect("/");
+  });
+};
 
 exports.register = function (req, res) {
   let user = new User(req.body);
