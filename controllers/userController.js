@@ -6,7 +6,7 @@ exports.login = function (req, res) {
     .login()
     .then(function (response) {
       req.session.user = { favColor: "Blue", username: user.data.username };
-      res.send(response);
+      res.redirect("/");
     })
     .catch(function (err) {
       res.send(err);
