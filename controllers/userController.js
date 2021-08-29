@@ -5,7 +5,7 @@ exports.login = function (req, res) {
   user
     .login()
     .then(function (response) {
-      req.session.user = { favColor: "Blue", username: user.data.username };
+      req.session.user = { username: user.data.username, avatar: user.avatar };
       req.session.save(function () {
         res.redirect("/");
       });
@@ -29,7 +29,7 @@ exports.register = async function (req, res) {
   user
     .register()
     .then(() => {
-      req.session.user = { username: user.data.username };
+      req.session.user = { username: user.data.username, avatar: user.avatar };
       req.session.save(function () {
         res.redirect("/");
       });
@@ -46,7 +46,10 @@ exports.register = async function (req, res) {
 
 exports.home = function (req, res) {
   if (req.session.user) {
-    res.render("home-dashboard", { username: req.session.user.username });
+    res.render("home-dashboard", {
+      username: req.session.user.username,
+      avatar: req.session.user.avatar,
+    });
   } else {
     res.render("home-guest", {
       errors: req.flash("errors"),
