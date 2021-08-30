@@ -3,7 +3,6 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const flash = require("connect-flash");
 const app = express();
-const router = require("./router");
 
 let sessionOptions = session({
   secret: "JavaScript is soooo cooolll",
@@ -22,6 +21,13 @@ app.set("view engine", "ejs");
 
 // Get body request
 app.use(express.urlencoded({ extended: false }));
+
+app.use(function (req, res, next) {
+  res.locals.user = req.session.user;
+  next();
+});
+
+const router = require("./router");
 
 app.use("/", router);
 
