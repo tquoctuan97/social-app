@@ -13,5 +13,10 @@ router.get(
   userController.mustBeLoggedIn,
   postController.viewCreateScreen
 );
+router.post(
+  "/save-new-post",
+  userController.mustBeLoggedIn,
+  postController.create
+);
 
 module.exports = router;
