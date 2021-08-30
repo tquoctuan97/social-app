@@ -1,9 +1,7 @@
 const Post = require("../model/Post");
 
 exports.create = function (req, res) {
-  req.body["author"] = req.session.user.username;
-
-  let post = new Post(req.body);
+  let post = new Post(req.body, req.session.user._id);
   post
     .create()
     .then(() => {

@@ -14,7 +14,7 @@ router.get(
   postController.viewCreateScreen
 );
 router.post(
-  "/save-new-post",
+  "/create-post",
   userController.mustBeLoggedIn,
   postController.create
 );
