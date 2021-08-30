@@ -20,3 +20,7 @@ exports.create = function (req, res) {
 exports.viewCreateScreen = function (req, res) {
   res.render("create-post", { errors: req.flash("errors") });
 };
+
+exports.viewSinglePost = function (req, res) {
+  res.render("single-post-screen");
+};
