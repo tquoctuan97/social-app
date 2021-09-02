@@ -1,5 +1,6 @@
 const postsConllection = require("../db").db().collection("posts");
 const ObjectID = require("mongodb").ObjectID;
+const User = require("./User");
 
 let Post = function (data, userId) {
   this.data = data;
@@ -61,12 +62,46 @@ Post.findSingleById = function (id) {
       reject();
       return;
     }
-    let post = await postsConllection.findOne({ _id: new ObjectID(id) });
-    if (post) {
-      resolve(post);
+    // let post = await postsConllection.findOne({ _id: new ObjectID(id) });
+    let posts = await postsConllection
+      .aggregate([
+        { $match: { _id: new ObjectID(id) } },
+        {
+          $lookup: {
+            from: "users",
+            localField: "author",
+            foreignField: "_id",
+            as: "authorDocument",
+          },
+        },
+        {
+          $project: {
+            _id: 1,
+            title: 1,
+            body: 1,
+            createdDate: 1,
+            author: { $arrayElemAt: ["$authorDocument", 0] },
+          },
+        },
+      ])
+      .toArray();
+
+    // clean up author property
+    posts = posts.map(function (post) {
+      post.author = {
+        username: post.author.username,
+        avatar: new User(post.author, true).avatar,
+      };
+      return post;
+    });
+
+    if (posts.length) {
+      console.log(posts[0]);
+      resolve(posts[0]);
     } else {
       reject();
     }
   });
 };
+
 module.exports = Post;
