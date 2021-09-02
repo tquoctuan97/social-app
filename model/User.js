@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const usersConllection = require("../db").db().collection("users");
+const usersCollection = require("../db").db().collection("users");
 const validator = require("validator");
 const md5 = require("md5");
 
@@ -70,7 +70,7 @@ User.prototype.validate = function () {
       this.data.username.length < 31 &&
       validator.isAlphanumeric(this.data.username)
     ) {
-      let usernameExists = await usersConllection.findOne({
+      let usernameExists = await usersCollection.findOne({
         username: this.data.username,
       });
       if (usernameExists) {
@@ -80,7 +80,7 @@ User.prototype.validate = function () {
 
     // Check if email has already taken
     if (validator.isEmail(this.data.email)) {
-      let emailExists = await usersConllection.findOne({
+      let emailExists = await usersCollection.findOne({
         email: this.data.email,
       });
       if (emailExists) {
@@ -95,7 +95,7 @@ User.prototype.validate = function () {
 User.prototype.login = function () {
   return new Promise((resolve, reject) => {
     this.cleanUp();
-    usersConllection
+    usersCollection
       .findOne({ username: this.data.username })
       .then((tempUser) => {
         if (
@@ -127,7 +127,7 @@ User.prototype.register = function () {
       // hash user password
       let salt = bcrypt.genSaltSync(10);
       this.data.password = bcrypt.hashSync(this.data.password, salt);
-      await usersConllection.insertOne(this.data);
+      await usersCollection.insertOne(this.data);
       this.getAvatar();
       resolve();
     } else {
@@ -138,6 +138,33 @@ User.prototype.register = function () {
 
 User.prototype.getAvatar = function () {
   this.avatar = `https://gravatar.com/avatar/${md5(this.data.email)}?s=128`;
+};
+
+User.findByUsername = function (username) {
+  return new Promise((resolve, reject) => {
+    if (typeof username != "string") {
+      reject();
+      return;
+    }
+    usersCollection
+      .findOne({ username: username })
+      .then(function (userDoc) {
+        if (userDoc) {
+          // cleanup data user
+          let user = new User(userDoc, true);
+          user = {
+            username: user.data.username,
+            avatar: user.avatar,
+          };
+          resolve(user);
+        } else {
+          reject();
+        }
+      })
+      .catch(function () {
+        reject();
+      });
+  });
 };
 
 module.exports = User;
