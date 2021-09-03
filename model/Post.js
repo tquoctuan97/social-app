@@ -56,6 +56,21 @@ Post.prototype.create = function () {
   });
 };
 
+Post.prototype.edit = function (id, userRequest) {
+  return new Promise(async (resolve, reject) => {
+    this.cleanUp();
+    this.validate();
+    if (userRequest != this.data.author) {
+      reject();
+      return;
+    }
+    if (!this.errors.length) {
+    } else {
+      reject(this.errors);
+    }
+  });
+};
+
 Post.reusablePostQuery = function (uniqueOperations, visitorId) {
   return new Promise(async (resolve, reject) => {
     let aggOperations = uniqueOperations.concat([
