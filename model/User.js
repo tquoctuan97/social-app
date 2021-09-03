@@ -151,12 +151,13 @@ User.findByUsername = function (username) {
       .then(function (userDoc) {
         if (userDoc) {
           // cleanup data user
-          let user = new User(userDoc, true);
-          user = {
-            username: user.data.username,
-            avatar: user.avatar,
+          userDoc = new User(userDoc, true);
+          userDoc = {
+            _id: userDoc.data._id,
+            username: userDoc.data.username,
+            avatar: userDoc.avatar,
           };
-          resolve(user);
+          resolve(userDoc);
         } else {
           reject();
         }
