@@ -23,6 +23,13 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 
 app.use(function (req, res, next) {
+  // make current user id avaliable on req object
+  if (req.session.user) {
+    req.visitorId = req.session.user._id;
+  } else {
+    req.visitorId = 0;
+  }
+  // make user session data avaliable from within view templates
   res.locals.user = req.session.user;
   next();
 });
