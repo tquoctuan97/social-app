@@ -3,9 +3,7 @@
   
   <div class="container py-md-5 container--narrow">
 
-    <% errors.forEach( function(message) { %>
-      <div class="alert alert-danger text-center"><%= message %></div>
-    <% }) %>
+    <%- include('./includes/flash') %>
 
     <form action="/post/<%= post._id %>/edit" method="POST">
       <div class="form-group">

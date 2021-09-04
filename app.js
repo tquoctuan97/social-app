@@ -5,7 +5,7 @@ const flash = require("connect-flash");
 const app = express();
 
 let sessionOptions = session({
-  secret: "JavaScript is soooo cooolll",
+  secret: "JavaScript is sooooooooo coool",
   store: new MongoStore({ client: require("./db") }),
   resave: false,
   saveUninitialized: false,
@@ -15,26 +15,31 @@ let sessionOptions = session({
 app.use(sessionOptions);
 app.use(flash());
 
-app.use(express.static("public"));
-app.set("views", "views");
-app.set("view engine", "ejs");
-
-// Get body request
-app.use(express.urlencoded({ extended: false }));
-
 app.use(function (req, res, next) {
-  // make current user id avaliable on req object
+  // make all error and success flash messages available from all templates
+  res.locals.errors = req.flash("errors");
+  res.locals.success = req.flash("success");
+
+  // make current user id available on the req object
   if (req.session.user) {
     req.visitorId = req.session.user._id;
   } else {
     req.visitorId = 0;
   }
-  // make user session data avaliable from within view templates
+
+  // make user session data available from within view templates
   res.locals.user = req.session.user;
   next();
 });
 
 const router = require("./router");
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+app.use(express.static("public"));
+app.set("views", "views");
+app.set("view engine", "ejs");
 
 app.use("/", router);
 
