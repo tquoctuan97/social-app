@@ -42,4 +42,13 @@ Follow.prototype.create = function () {
   });
 };
 
+Follow.isVistorFollowing = async function (followedId, visitorId) {
+  let followDoc = await followsCollection.findOne({followedId: followedId, authorId: new ObjectID(visitorId)});
+  if (followDoc) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 module.exports = Follow;

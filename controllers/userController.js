@@ -1,13 +1,24 @@
-const Post = require("../model/Post");
-const User = require("../model/User");
+const Post = require('../model/Post');
+const User = require('../model/User');
+const Follow = require('../model/Follow');
+
+exports.shareProfile = async function (req, res, next) {
+  let isFollowing = false;
+  if (req.session.user) {
+    isFollowing = await Follow.isVistorFollowing(req.profileUser._id, req.visitorId);
+  }
+
+  req.isFollowing = isFollowing;
+  next();
+};
 
 exports.mustBeLoggedIn = function (req, res, next) {
   if (req.session.user) {
     next();
   } else {
-    req.flash("errors", "You must be logged in to perform that action");
+    req.flash('errors', 'You must be logged in to perform that action');
     req.session.save(function () {
-      res.redirect("/");
+      res.redirect('/');
     });
   }
 };
@@ -23,20 +34,20 @@ exports.login = function (req, res) {
         _id: user.data._id,
       };
       req.session.save(function () {
-        res.redirect("/");
+        res.redirect('/');
       });
     })
     .catch(function (err) {
-      req.flash("errors", err);
+      req.flash('errors', err);
       req.session.save(function () {
-        res.redirect("/");
+        res.redirect('/');
       });
     });
 };
 
 exports.logout = function (req, res) {
   req.session.destroy(function () {
-    res.redirect("/");
+    res.redirect('/');
   });
 };
 
@@ -51,25 +62,25 @@ exports.register = async function (req, res) {
         _id: user.data._id,
       };
       req.session.save(function () {
-        res.redirect("/");
+        res.redirect('/');
       });
     })
     .catch((regErrors) => {
       regErrors.forEach(function (error) {
-        req.flash("regErrors", error);
+        req.flash('regErrors', error);
       });
       req.session.save(function () {
-        res.redirect("/");
+        res.redirect('/');
       });
     });
 };
 
 exports.home = function (req, res) {
   if (req.session.user) {
-    res.render("home-dashboard");
+    res.render('home-dashboard');
   } else {
-    res.render("home-guest", {
-      regErrors: req.flash("regErrors"),
+    res.render('home-guest', {
+      regErrors: req.flash('regErrors'),
     });
   }
 };
@@ -81,18 +92,19 @@ exports.ifUserExists = function (req, res, next) {
       next();
     })
     .catch(function () {
-      res.render("404");
+      res.render('404');
     });
 };
 
 exports.profilePostScreen = function (req, res) {
   Post.findByAuthorId(req.profileUser._id)
     .then((posts) => {
-      res.render("profile", {
+      res.render('profile', {
         posts: posts,
         profileUsername: req.profileUser.username,
         profileAvatar: req.profileUser.avatar,
+        isFollowing: req.isFollowing,
       });
     })
-    .catch(() => res.render("404"));
+    .catch(() => res.render('404'));
 };
