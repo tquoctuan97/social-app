@@ -15,7 +15,7 @@ Follow.prototype.cleanUp = function () {
   }
 };
 
-Follow.prototype.validate = async function () {
+Follow.prototype.validate = async function (action) {
   // Check username is exist
   let accountExists = await usersCollection.findOne({username: this.followedUsername});
   if (accountExists) {
@@ -23,21 +23,53 @@ Follow.prototype.validate = async function () {
   } else {
     this.errors.push('You can not follow a username is not exists');
   }
+
+  let doesFollowAlreadyExist = await followsCollection.findOne({
+    followedId: this.followedId,
+    authorId: new ObjectID(this.authorId),
+  });
+
+  if (action == 'create') {
+    if (doesFollowAlreadyExist) {
+      this.errors.push('You are already following this user');
+    }
+  }
+
+  if (action == 'delete') {
+    if (!doesFollowAlreadyExist) {
+      this.errors.push('You cannot stop following someone you do not already follow.');
+    }
+  }
+
+  if (this.followedId.equals(this.authorId)) {
+    this.errors.push('You cannot follow yourself.');
+  }
 };
 
 Follow.prototype.create = function () {
   return new Promise(async (resolve, reject) => {
     this.cleanUp();
-    await this.validate();
-
-    console.log('followedId: ' + this.followedId);
-    console.log('authorId: ' + this.authorId);
+    await this.validate('create');
 
     if (!this.errors.length) {
       await followsCollection.insertOne({followedId: this.followedId, authorId: new ObjectID(this.authorId)});
       resolve();
     } else {
-      reject();
+      reject(this.errors);
+    }
+  });
+};
+
+Follow.prototype.delete = function () {
+  return new Promise(async (resolve, reject) => {
+    this.cleanUp();
+    await this.validate('delete');
+
+    if (!this.errors.length) {
+      await followsCollection.deleteOne({followedId: this.followedId, authorId: new ObjectID(this.authorId)});
+      resolve();
+    } else {
+      reject(this.errors);
     }
   });
 };
