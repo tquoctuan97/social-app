@@ -1,0 +1,19 @@
+<%- include('./includes/header') %>
+
+<div class="container py-md-5 container--narrow">
+
+  <%- include('./includes/flash') %>
+
+  <%- include('./includes/profileShare') %>
+
+  <div class="list-group">
+    <% following.forEach(function(user) { %>
+      <a href="/profile/<%= user.username %>" class="list-group-item list-group-item-action">
+        <img class="avatar-tiny" src="<%= user.avatar %>>">
+        <%= user.username %>
+      </a>
+    <% }) %>
+  </div>
+</div>
+
+<%- include('./includes/footer') %>
