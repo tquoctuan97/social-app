@@ -15,7 +15,7 @@ router.get(
   '/profile/:username',
   userController.ifUserExists,
   userController.shareProfile,
-  userController.profilePostScreen
+  userController.profilePostsScreen
 );
 router.get(
   '/profile/:username/followers',
