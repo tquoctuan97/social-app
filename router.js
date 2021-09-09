@@ -17,6 +17,12 @@ router.get(
   userController.shareProfile,
   userController.profilePostScreen
 );
+router.get(
+  '/profile/:username/followers',
+  userController.ifUserExists,
+  userController.shareProfile,
+  userController.profileFollowersScreen
+);
 
 // Post related routes
 router.get('/create-post', userController.mustBeLoggedIn, postController.viewCreateScreen);

@@ -112,3 +112,18 @@ exports.profilePostScreen = function (req, res) {
     })
     .catch(() => res.render('404'));
 };
+
+exports.profileFollowersScreen = async function (req, res) {
+  try {
+    let followers = await Follow.getFollowersById(req.profileUser._id);
+    res.render('profile-followers', {
+      followers: followers,
+      profileUsername: req.profileUser.username,
+      profileAvatar: req.profileUser.avatar,
+      isFollowing: req.isFollowing,
+      isVisitorProfile: req.isVisitorProfile,
+    });
+  } catch {
+    res.render('404');
+  }
+};
