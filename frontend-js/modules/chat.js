@@ -16,7 +16,7 @@ export default class Search {
   // Events
   events() {
     this.chatForm.addEventListener('submit', (e) => {
-      e.preventDefault;
+      e.preventDefault();
       this.sendMessageToServer();
     });
     this.openIcon.addEventListener('click', () => {
