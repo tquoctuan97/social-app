@@ -96,9 +96,10 @@ exports.register = async function (req, res) {
 exports.home = async function (req, res) {
   if (req.session.user) {
     let posts = await Post.getFeed(req.session.user._id);
-    res.render('home-dashboard', {posts: posts});
+    res.render('home-dashboard', {title: 'Home', posts: posts});
   } else {
     res.render('home-guest', {
+      title: 'Sign In or Sign Up',
       regErrors: req.flash('regErrors'),
     });
   }
@@ -119,6 +120,7 @@ exports.profilePostsScreen = function (req, res) {
   Post.findByAuthorId(req.profileUser._id)
     .then((posts) => {
       res.render('profile', {
+        title: `Profile for ${req.profileUser.username}`,
         currentPage: 'posts',
         posts: posts,
         profileUsername: req.profileUser.username,
@@ -135,6 +137,7 @@ exports.profileFollowersScreen = async function (req, res) {
   try {
     let followers = await Follow.getFollowersById(req.profileUser._id);
     res.render('profile-followers', {
+      title: `Followers of ${req.profileUser.username}`,
       currentPage: 'followers',
       followers: followers,
       profileUsername: req.profileUser.username,
@@ -152,6 +155,7 @@ exports.profileFollowingScreen = async function (req, res) {
   try {
     let following = await Follow.getFollowingById(req.profileUser._id);
     res.render('profile-following', {
+      title: `${req.profileUser.username} is following`,
       currentPage: 'following',
       following: following,
       profileUsername: req.profileUser.username,

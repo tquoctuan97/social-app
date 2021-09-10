@@ -104,6 +104,9 @@ export default class Search {
 
   openOverlay() {
     document.querySelector('.search-overlay').classList.add('search-overlay--visible');
+    setTimeout(() => {
+      this.inputField.focus();
+    }, 100);
   }
 
   injectHTML() {
