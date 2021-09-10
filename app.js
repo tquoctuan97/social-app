@@ -1,16 +1,16 @@
-const express = require("express");
-const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
-const flash = require("connect-flash");
-const markdown = require("marked");
+const express = require('express');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+const flash = require('connect-flash');
+const markdown = require('marked');
 const app = express();
 
 let sessionOptions = session({
-  secret: "JavaScript is sooooooooo coool",
-  store: new MongoStore({ client: require("./db") }),
+  secret: 'JavaScript is sooooooooo coool',
+  store: new MongoStore({client: require('./db')}),
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 24, httpOnly: true },
+  cookie: {maxAge: 1000 * 60 * 60 * 24, httpOnly: true},
 });
 
 app.use(sessionOptions);
@@ -22,8 +22,8 @@ app.use(function (req, res, next) {
     return markdown(content);
   };
   // make all error and success flash messages available from all templates
-  res.locals.errors = req.flash("errors");
-  res.locals.success = req.flash("success");
+  res.locals.errors = req.flash('errors');
+  res.locals.success = req.flash('success');
 
   // make current user id available on the req object
   if (req.session.user) {
@@ -37,15 +37,25 @@ app.use(function (req, res, next) {
   next();
 });
 
-const router = require("./router");
+const router = require('./router');
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
-app.use(express.static("public"));
-app.set("views", "views");
-app.set("view engine", "ejs");
+app.use(express.static('public'));
+app.set('views', 'views');
+app.set('view engine', 'ejs');
 
-app.use("/", router);
+app.use('/', router);
 
-module.exports = app;
+const server = require('http').createServer(app);
+
+const io = require('socket.io')(server);
+
+io.on('connection', function (socket) {
+  socket.on('chatMessageFromBrowser', function (data) {
+    io.emit('chatMessageFromServer', {message: data.message});
+  });
+});
+
+module.exports = server;
