@@ -1,5 +1,5 @@
 import axios from 'axios';
-import DOMpurify from 'dompurify';
+import DOMPurify from 'dompurify';
 
 export default class Search {
   //1. Select DOM elements, and keep track of any useful data
@@ -60,7 +60,7 @@ export default class Search {
 
   renderResultsHTML(posts) {
     if (posts.length > 0) {
-      this.resultsArea.innerHTML = DOMpurify.sanitize(`<div class="list-group shadow-sm">
+      this.resultsArea.innerHTML = DOMPurify.sanitize(`<div class="list-group shadow-sm">
       <div class="list-group-item active"><strong>Search Results</strong> (${
         posts.length > 1 ? `${posts.length} items found` : `${posts.length} item found`
       })</div>
