@@ -30,7 +30,7 @@ exports.shareProfile = async function (req, res, next) {
   next();
 };
 
-exports.checkUsername = function (req, res) {
+exports.doesUsernameExist = function (req, res) {
   User.findByUsername(req.body.username)
     .then(() => {
       res.json(true);
@@ -38,6 +38,11 @@ exports.checkUsername = function (req, res) {
     .catch(() => {
       res.json(false);
     });
+};
+
+exports.doesEmailExist = async function (req, res) {
+  let emailBoolean = await User.findByEmail(req.body.email);
+  res.json(emailBoolean);
 };
 
 exports.mustBeLoggedIn = function (req, res, next) {
