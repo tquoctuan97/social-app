@@ -57,6 +57,15 @@ exports.mustBeLoggedIn = function (req, res, next) {
   }
 };
 
+exports.apiMustBeLoggedIn = function (req, res, next) {
+  try {
+    req.apiUser = jwt.verify(req.body.token, process.env.JWTSECRET);
+    next();
+  } catch {
+    res.json('Sorry, you must provide a valid token');
+  }
+};
+
 exports.login = function (req, res) {
   let user = new User(req.body);
   user

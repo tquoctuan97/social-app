@@ -20,6 +20,18 @@ exports.create = function (req, res) {
     });
 };
 
+exports.apiCreatePost = function (req, res) {
+  let post = new Post(req.body, req.apiUser._id);
+  post
+    .create()
+    .then((newPostId) => {
+      res.json('New post successfully created');
+    })
+    .catch((errors) => {
+      res.json(errors);
+    });
+};
+
 exports.viewCreateScreen = function (req, res) {
   res.render('create-post', {title: 'Create a new post'});
 };
