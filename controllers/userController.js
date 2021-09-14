@@ -30,6 +30,16 @@ exports.shareProfile = async function (req, res, next) {
   next();
 };
 
+exports.checkUsername = function (req, res) {
+  User.findByUsername(req.body.username)
+    .then(() => {
+      res.json(true);
+    })
+    .catch(() => {
+      res.json(false);
+    });
+};
+
 exports.mustBeLoggedIn = function (req, res, next) {
   if (req.session.user) {
     next();
