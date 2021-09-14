@@ -1,6 +1,7 @@
 const Post = require('../model/Post');
 const User = require('../model/User');
 const Follow = require('../model/Follow');
+const jwt = require('jsonwebtoken');
 
 exports.shareProfile = async function (req, res, next) {
   let isVisitorProfile = false;
@@ -75,6 +76,18 @@ exports.login = function (req, res) {
       req.session.save(function () {
         res.redirect('/');
       });
+    });
+};
+
+exports.apiLogin = function (req, res) {
+  let user = new User(req.body);
+  user
+    .login()
+    .then(() => {
+      res.json(jwt.sign({_id: user.data._id}, process.env.JWTSECRET, {expiresIn: '7d'}));
+    })
+    .catch(() => {
+      res.json('Invalid username/password');
     });
 };
 
