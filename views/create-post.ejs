@@ -16,6 +16,8 @@
         <p class="small">Using Markdown to format content: <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">Markdown Cheatsheet</a></p>
         <textarea required name="body" id="post-body" class="body-content tall-textarea form-control" type="text"></textarea>
       </div>
+
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       
       <button class="btn btn-primary">Save New Post</button>
     </form>
