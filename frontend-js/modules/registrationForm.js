@@ -2,6 +2,7 @@ import axios from 'axios';
 
 export default class RegistrationForm {
   constructor() {
+    this.form = document.querySelector('#registration-form');
     this.allField = document.querySelectorAll('#registration-form .form-group');
     this.username = document.querySelector('#username-register');
     this.username.previousValue = '';
@@ -9,12 +10,18 @@ export default class RegistrationForm {
     this.email.previousValue = '';
     this.password = document.querySelector('#password-register');
     this.password.previousValue = '';
+    this.username.isUnique = false;
+    this.email.isUnique = false;
     this.events();
     this.insertValidationElements();
   }
 
   // Events
   events() {
+    this.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.formSubmitHandler();
+    });
     this.username.addEventListener('keyup', () => {
       this.isDifferent(this.username, this.usernameHandler);
     });
@@ -24,9 +31,36 @@ export default class RegistrationForm {
     this.password.addEventListener('keyup', () => {
       this.isDifferent(this.password, this.passwordHandler);
     });
+    this.username.addEventListener('blur', () => {
+      this.isDifferent(this.username, this.usernameHandler);
+    });
+    this.email.addEventListener('blur', () => {
+      this.isDifferent(this.email, this.emailHandler);
+    });
+    this.password.addEventListener('blur', () => {
+      this.isDifferent(this.password, this.passwordHandler);
+    });
   }
 
   // Methods
+  formSubmitHandler() {
+    this.usernameImmediately();
+    this.usernameAfterDelay();
+    this.emailAfterDelay();
+    this.passwordImmediately();
+    this.passwordAfterDelay();
+
+    if (
+      this.username.isUnique &&
+      !this.username.errors &&
+      this.email.isUnique &&
+      !this.email.errors &&
+      !this.password.errors
+    ) {
+      this.form.submit();
+    }
+  }
+
   isDifferent(el, handler) {
     if (el.value != el.previousValue) {
       handler.call(this);
@@ -69,10 +103,10 @@ export default class RegistrationForm {
         .post('/doesUsernameExist', {username: this.username.value})
         .then((response) => {
           if (response.data) {
-            this.username.unique = false;
+            this.username.isUnique = false;
             this.showValidationError(this.username, 'That username is already being used');
           } else {
-            this.username.unique = true;
+            this.username.isUnique = true;
             this.hideValidationError(this.username);
           }
         })
@@ -100,10 +134,10 @@ export default class RegistrationForm {
         .post('/doesEmailExist', {email: this.email.value})
         .then((response) => {
           if (response.data) {
-            this.email.unique = false;
+            this.email.isUnique = false;
             this.showValidationError(this.email, 'That email is already being used');
           } else {
-            this.email.unique = true;
+            this.email.isUnique = true;
             this.hideValidationError(this.email);
           }
         })
