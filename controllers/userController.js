@@ -3,6 +3,16 @@ const User = require('../model/User');
 const Follow = require('../model/Follow');
 const jwt = require('jsonwebtoken');
 
+exports.apiGetPostsByUsername = async function (req, res) {
+  try {
+    let authorDoc = await User.findByUsername(req.params.username);
+    let posts = await Post.findByAuthorId(authorDoc._id);
+    res.json(posts);
+  } catch {
+    res.json('Sorry, invalid user requested');
+  }
+};
+
 exports.shareProfile = async function (req, res, next) {
   let isVisitorProfile = false;
   let isFollowing = false;
