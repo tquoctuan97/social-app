@@ -7,7 +7,10 @@ const cors = require('cors');
 
 routerApi.use(cors());
 
+// related user
 routerApi.post('/login', userController.apiLogin);
+routerApi.post('/register', userController.apiRegister);
+
 routerApi.post('/create-post', userController.apiMustBeLoggedIn, postController.apiCreatePost);
 routerApi.delete('/post/:id', userController.apiMustBeLoggedIn, postController.apiDelete);
 routerApi.get('/postsByAuthor/:username', userController.apiGetPostsByUsername);

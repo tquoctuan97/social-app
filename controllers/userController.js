@@ -140,6 +140,18 @@ exports.register = async function (req, res) {
     });
 };
 
+exports.apiRegister = async function (req, res) {
+  let user = new User(req.body);
+  user
+    .register()
+    .then(() => {
+      res.json('Register Successfully');
+    })
+    .catch((regErrors) => {
+      res.json(regErrors);
+    });
+};
+
 exports.home = async function (req, res) {
   if (req.session.user) {
     let posts = await Post.getFeed(req.session.user._id);
