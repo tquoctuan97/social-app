@@ -3,6 +3,9 @@ const User = require('../model/User');
 const Follow = require('../model/Follow');
 const jwt = require('jsonwebtoken');
 
+// how long a token lasts before expiring
+const tokenLasts = '365d';
+
 exports.apiGetPostsByUsername = async function (req, res) {
   try {
     let authorDoc = await User.findByUsername(req.params.username);
@@ -103,7 +106,15 @@ exports.apiLogin = function (req, res) {
   user
     .login()
     .then(() => {
-      res.json(jwt.sign({_id: user.data._id}, process.env.JWTSECRET, {expiresIn: '7d'}));
+      res.json({
+        token: jwt.sign(
+          {_id: user.data._id, username: user.data.username, avatar: user.avatar},
+          process.env.JWTSECRET,
+          {expiresIn: tokenLasts}
+        ),
+        username: user.data.username,
+        avatar: user.avatar,
+      });
     })
     .catch(() => {
       res.json('Invalid username/password');
@@ -145,7 +156,15 @@ exports.apiRegister = async function (req, res) {
   user
     .register()
     .then(() => {
-      res.json('Register Successfully');
+      res.json({
+        token: jwt.sign(
+          {_id: user.data._id, username: user.data.username, avatar: user.avatar},
+          process.env.JWTSECRET,
+          {expiresIn: tokenLasts}
+        ),
+        username: user.data.username,
+        avatar: user.avatar,
+      });
     })
     .catch((regErrors) => {
       res.json(regErrors);
