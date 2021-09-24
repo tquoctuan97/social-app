@@ -25,7 +25,7 @@ exports.apiCreatePost = function (req, res) {
   post
     .create()
     .then((newPostId) => {
-      res.json('New post successfully created');
+      res.json(newPostId);
     })
     .catch((errors) => {
       res.json(errors);
