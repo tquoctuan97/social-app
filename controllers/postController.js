@@ -45,6 +45,15 @@ exports.viewSinglePost = async function (req, res) {
   }
 };
 
+exports.apiGetSinglePost = async function (req, res) {
+  try {
+    let post = await Post.findSingleById(req.params.id, 0);
+    res.json(post);
+  } catch {
+    res.json(false);
+  }
+};
+
 exports.viewEditScreen = async function (req, res) {
   try {
     let post = await Post.findSingleById(req.params.id, req.visitorId);

@@ -11,6 +11,7 @@ routerApi.use(cors());
 routerApi.post('/login', userController.apiLogin);
 routerApi.post('/register', userController.apiRegister);
 
+routerApi.get('/post/:id', postController.apiGetSinglePost);
 routerApi.post('/create-post', userController.apiMustBeLoggedIn, postController.apiCreatePost);
 routerApi.delete('/post/:id', userController.apiMustBeLoggedIn, postController.apiDelete);
 routerApi.get('/postsByAuthor/:username', userController.apiGetPostsByUsername);
