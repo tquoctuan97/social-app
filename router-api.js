@@ -23,7 +23,7 @@ routerApi.get(
   userController.shareProfile,
   userController.profileBasicData
 );
-routerApi.get('/postsByAuthor/:username', userController.apiGetPostsByUsername);
+routerApi.get('/profile/:username/posts', userController.apiGetPostsByUsername);
 apiRouter.get('/profile/:username/followers', userController.ifUserExists, userController.profileFollowers);
 apiRouter.get('/profile/:username/following', userController.ifUserExists, userController.profileFollowing);
 
