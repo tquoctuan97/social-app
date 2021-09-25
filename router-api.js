@@ -20,10 +20,10 @@ apiRouter.delete('/post/:id', userController.apiMustBeLoggedIn, postController.a
 apiRouter.get(
   '/profile/:username',
   userController.ifUserExists,
-  userController.shareProfile,
+  userController.shareApiProfile,
   userController.profileBasicData
 );
-apiRouter.get('/profile/:username/posts', userController.apiGetPostsByUsername);
+apiRouter.get('/profile/:username/posts', userController.ifUserExists, userController.apiGetPostsByUsername);
 apiRouter.get('/profile/:username/followers', userController.ifUserExists, userController.profileFollowers);
 apiRouter.get('/profile/:username/following', userController.ifUserExists, userController.profileFollowing);
 

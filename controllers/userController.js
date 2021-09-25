@@ -44,6 +44,32 @@ exports.shareProfile = async function (req, res, next) {
   next();
 };
 
+exports.shareApiProfile = async function (req, res, next) {
+  let viewerId;
+  try {
+    let viewer = jwt.verify(req.body.token, process.env.JWTSECRET);
+    viewerId = viewer._id;
+  } catch (e) {
+    viewerId = 0;
+  }
+  req.isFollowing = await Follow.isVistorFollowing(req.profileUser._id, viewerId);
+
+  let postCountPromise = Post.countPostsByAuthor(req.profileUser._id);
+  let followerCountPromise = Follow.countFollowersById(req.profileUser._id);
+  let followingCountPromise = Follow.countFollowingById(req.profileUser._id);
+  let [postCount, followerCount, followingCount] = await Promise.all([
+    postCountPromise,
+    followerCountPromise,
+    followingCountPromise,
+  ]);
+
+  req.postCount = postCount;
+  req.followerCount = followerCount;
+  req.followingCount = followingCount;
+
+  next();
+};
+
 exports.doesUsernameExist = function (req, res) {
   User.findByUsername(req.body.username)
     .then(() => {
@@ -249,7 +275,7 @@ exports.profileFollowingScreen = async function (req, res) {
 
 exports.profileBasicData = function (req, res) {
   res.json({
-    profileUsername: req.profileUser.profileUsername,
+    profileUsername: req.profileUser.username,
     profileAvatar: req.profileUser.avatar,
     isFollowing: req.isFollowing,
     counts: {postCount: req.postCount, followerCount: req.followerCount, followingCount: req.followingCount},
