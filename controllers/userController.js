@@ -246,3 +246,32 @@ exports.profileFollowingScreen = async function (req, res) {
     res.render('404');
   }
 };
+
+exports.profileBasicData = function (req, res) {
+  res.json({
+    profileUsername: req.profileUser.profileUsername,
+    profileAvatar: req.profileUser.avatar,
+    isFollowing: req.isFollowing,
+    counts: {postCount: req.postCount, followerCount: req.followerCount, followingCount: req.followingCount},
+  });
+};
+
+exports.profileFollowers = async function (req, res) {
+  try {
+    let followers = await Follow.getFollowersById(req.profileUser._id);
+    //res.header("Cache-Control", "max-age=10").json(followers)
+    res.json(followers);
+  } catch (e) {
+    res.status(500).send('Error');
+  }
+};
+
+exports.profileFollowing = async function (req, res) {
+  try {
+    let following = await Follow.getFollowingById(req.profileUser._id);
+    //res.header("Cache-Control", "max-age=10").json(following)
+    res.json(following);
+  } catch (e) {
+    res.status(500).send('Error');
+  }
+};
