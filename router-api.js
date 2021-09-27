@@ -7,6 +7,9 @@ const cors = require('cors');
 
 apiRouter.use(cors());
 
+// check token to log out front-end if expired
+apiRouter.post('/checkToken', userController.checkToken);
+
 // user related route
 apiRouter.post('/login', userController.apiLogin);
 apiRouter.post('/register', userController.apiRegister);
@@ -14,6 +17,7 @@ apiRouter.post('/register', userController.apiRegister);
 // post related routes
 apiRouter.get('/post/:id', postController.apiGetSinglePost);
 apiRouter.post('/create-post', userController.apiMustBeLoggedIn, postController.apiCreatePost);
+apiRouter.post('/post/:id/edit', userController.apiMustBeLoggedIn, postController.apiUpdate);
 apiRouter.delete('/post/:id', userController.apiMustBeLoggedIn, postController.apiDelete);
 
 // profile related routes

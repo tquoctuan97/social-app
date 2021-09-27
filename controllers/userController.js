@@ -16,6 +16,15 @@ exports.apiGetPostsByUsername = async function (req, res) {
   }
 };
 
+exports.checkToken = function (req, res) {
+  try {
+    req.apiUser = jwt.verify(req.body.token, process.env.JWTSECRET);
+    res.json(true);
+  } catch (e) {
+    res.json(false);
+  }
+};
+
 exports.shareProfile = async function (req, res, next) {
   let isVisitorProfile = false;
   let isFollowing = false;

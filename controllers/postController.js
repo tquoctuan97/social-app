@@ -100,6 +100,26 @@ exports.edit = function (req, res) {
     });
 };
 
+exports.apiUpdate = function (req, res) {
+  let post = new Post(req.body, req.apiUser._id, req.params.id);
+  post
+    .update()
+    .then((status) => {
+      // the post was successfully updated in the database
+      // or user did have permission, but there were validation errors
+      if (status == 'success') {
+        res.json('success');
+      } else {
+        res.json('failure');
+      }
+    })
+    .catch(() => {
+      // a post with the requested id doesn't exist
+      // or if the current visitor is not the owner of the requested post
+      res.json('no permissions');
+    });
+};
+
 exports.delete = function (req, res) {
   Post.delete(req.params.id, req.visitorId)
     .then(() => {
