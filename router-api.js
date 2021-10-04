@@ -32,4 +32,8 @@ apiRouter.get('/profile/:username/posts', userController.ifUserExists, userContr
 apiRouter.get('/profile/:username/followers', userController.ifUserExists, userController.profileFollowers);
 apiRouter.get('/profile/:username/following', userController.ifUserExists, userController.profileFollowing);
 
+// follow routes
+apiRouter.post('/addFollow/:username', userController.apiMustBeLoggedIn, followController.apiAddFollow);
+apiRouter.post('/removeFollow/:username', userController.apiMustBeLoggedIn, followController.apiRemoveFollow);
+
 module.exports = apiRouter;

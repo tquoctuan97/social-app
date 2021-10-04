@@ -16,6 +16,18 @@ exports.addFollow = function (req, res) {
     });
 };
 
+exports.apiAddFollow = function (req, res) {
+  let follow = new Follow(req.params.username, req.apiUser._id);
+  follow
+    .create()
+    .then(() => {
+      res.json(true);
+    })
+    .catch((errors) => {
+      res.json(false);
+    });
+};
+
 exports.removeFollow = function (req, res) {
   let follow = new Follow(req.params.username, req.visitorId);
   follow
@@ -29,5 +41,17 @@ exports.removeFollow = function (req, res) {
         req.flash('errors', error);
       });
       req.session.save(() => res.redirect(`/profile/${req.params.username}`));
+    });
+};
+
+exports.apiRemoveFollow = function (req, res) {
+  let follow = new Follow(req.params.username, req.apiUser._id);
+  follow
+    .delete()
+    .then(() => {
+      res.json(true);
+    })
+    .catch((errors) => {
+      res.json(false);
     });
 };
