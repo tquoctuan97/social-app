@@ -19,6 +19,7 @@ apiRouter.get('/post/:id', postController.apiGetSinglePost);
 apiRouter.post('/create-post', userController.apiMustBeLoggedIn, postController.apiCreatePost);
 apiRouter.post('/post/:id/edit', userController.apiMustBeLoggedIn, postController.apiUpdate);
 apiRouter.delete('/post/:id', userController.apiMustBeLoggedIn, postController.apiDelete);
+apiRouter.post('/search', postController.search);
 
 // profile related routes
 apiRouter.get(
