@@ -11,6 +11,7 @@ apiRouter.use(cors());
 apiRouter.post('/checkToken', userController.checkToken);
 
 // user related route
+apiRouter.post('/getHomeFeed', userController.apiMustBeLoggedIn, userController.apiGetHomeFeed);
 apiRouter.post('/login', userController.apiLogin);
 apiRouter.post('/register', userController.apiRegister);
 

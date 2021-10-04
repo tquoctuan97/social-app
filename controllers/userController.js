@@ -218,6 +218,15 @@ exports.home = async function (req, res) {
   }
 };
 
+exports.apiGetHomeFeed = async function (req, res) {
+  try {
+    let posts = await Post.getFeed(req.apiUser._id);
+    res.json(posts);
+  } catch (e) {
+    res.status(500).send('Error');
+  }
+};
+
 exports.ifUserExists = function (req, res, next) {
   User.findByUsername(req.params.username)
     .then(function (userDocument) {
