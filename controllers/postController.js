@@ -28,7 +28,7 @@ exports.apiCreatePost = function (req, res) {
       res.json(newPostId);
     })
     .catch((errors) => {
-      res.json(errors);
+      res.json(false);
     });
 };
 
