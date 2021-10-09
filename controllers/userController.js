@@ -238,6 +238,17 @@ exports.ifUserExists = function (req, res, next) {
     });
 };
 
+exports.ifUserExistsByApi = function (req, res, next) {
+  User.findByUsername(req.params.username)
+    .then(function (userDocument) {
+      req.profileUser = userDocument;
+      next();
+    })
+    .catch(function () {
+      res.json(false);
+    });
+};
+
 exports.profilePostsScreen = function (req, res) {
   Post.findByAuthorId(req.profileUser._id)
     .then((posts) => {

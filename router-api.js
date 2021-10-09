@@ -3,9 +3,9 @@ const apiRouter = express.Router();
 const userController = require('./controllers/userController');
 const postController = require('./controllers/postController');
 const followController = require('./controllers/followController');
-const cors = require('cors');
+const cors = require("cors")
 
-apiRouter.use(cors());
+apiRouter.use(cors())
 
 // check token to log out front-end if expired
 apiRouter.post('/checkToken', userController.checkToken);
@@ -23,15 +23,15 @@ apiRouter.delete('/post/:id', userController.apiMustBeLoggedIn, postController.a
 apiRouter.post('/search', postController.search);
 
 // profile related routes
-apiRouter.get(
+apiRouter.post(
   '/profile/:username',
-  userController.ifUserExists,
+  userController.ifUserExistsByApi,
   userController.shareApiProfile,
   userController.profileBasicData
 );
-apiRouter.get('/profile/:username/posts', userController.ifUserExists, userController.apiGetPostsByUsername);
-apiRouter.get('/profile/:username/followers', userController.ifUserExists, userController.profileFollowers);
-apiRouter.get('/profile/:username/following', userController.ifUserExists, userController.profileFollowing);
+apiRouter.get('/profile/:username/posts', userController.ifUserExistsByApi, userController.apiGetPostsByUsername);
+apiRouter.get('/profile/:username/followers', userController.ifUserExistsByApi, userController.profileFollowers);
+apiRouter.get('/profile/:username/following', userController.ifUserExistsByApi, userController.profileFollowing);
 
 // follow routes
 apiRouter.post('/addFollow/:username', userController.apiMustBeLoggedIn, followController.apiAddFollow);
