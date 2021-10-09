@@ -1,6 +1,7 @@
 # Small Social Application
 
 Demo: https://m2-social.herokuapp.com/
+
 Techstack: Express, MongoDB
 
 Feature:
