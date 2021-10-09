@@ -9,6 +9,8 @@ Feature:
 2. CRUD Post
 3. Follow/Unfollow User
 4. Home page Get newsfeed from following
+5. Search Post
+6. Chat with Socket.io
 
 API: https://documenter.getpostman.com/view/7316398/UUxxgoGj
 
